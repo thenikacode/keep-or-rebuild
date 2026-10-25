@@ -1,6 +1,6 @@
 {
   "name": "keep-or-rebuild",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Tells you whether to keep paying for an app, switch to open source, or rebuild only the part you use. Quotes licenses from the LICENSE files.",
   "author": {
     "name": "Nika Code"

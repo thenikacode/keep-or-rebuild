@@ -4,9 +4,9 @@
 
 **A Claude Code skill that tells you whether to keep paying for an app, switch to open source, or rebuild only the part you use.**
 
-![Sped-up animation of a real keep-or-rebuild run in Claude Code, rendered from the run log. It opens on the verdict, KEEP, and the assumption that would flip that verdict. Then it replays the prompt (a made-up Calendly test case) and the 12 page fetches, and ends on the verdict and what you'd lose.](docs/demo.gif)
+![Sped-up animation of a real keep-or-rebuild run in Claude Code, rendered from the run log. It opens on the verdict, REPLACE: Cal.com's free hosted plan covers the booking link, Google sync and reminders, and needing custom reminder text would flip it to KEEP. Then it replays the prompt (a made-up Calendly test case), the 2 web searches and the 7 pages it read, and ends on the verdict and what you'd lose.](docs/demo.gif)
 
-It checks one product per run. You get a verdict, the licenses quoted from each LICENSE file, what you'd lose, the first step and the sources it opened. In the demo run it read 9 pages in 80 seconds ([full output](#what-you-get)).
+It checks one product per run. You get a verdict, a cheaper plan if one covers what you use, the licenses quoted from each LICENSE file, what you'd lose, the first step and the sources it opened. In the demo run it read 7 pages in 71 seconds ([full output](#what-you-get)).
 
 ## Install
 
@@ -45,7 +45,7 @@ If you installed it with `npx skills add`, in Claude Code the command is `/keep-
 
 ## What you get
 
-A demo run on 24 Oct 2026 with Claude Code 2.1.309. It's a real run with a made-up input: we don't use Calendly. The skill read 9 pages (12 fetches) in 80 seconds, and the output below is unedited.
+A demo run on 25 Oct 2026 with keep-or-rebuild v0.1.2 and Claude Code 2.1.309. It's a real run with a made-up input: we don't use Calendly. The skill ran 2 web searches and read 7 pages in 71 seconds, and the output below is unedited.
 
 The input:
 
@@ -53,45 +53,45 @@ The input:
 /keep-or-rebuild:keep-or-rebuild Calendly Standard, $12/month, web. I use one 30-minute booking link, Google Calendar sync and email reminders. Only I use it. Just tell me.
 ```
 
-The output:
-
-Done checking. Here's the verdict.
+The output (the skill wrote its last line under the code block):
 
 ```
-VERDICT: KEEP
-The open-source self-hosted option doesn't do your reminder emails, and Calendly's free plan doesn't either. Moving means running a server and still losing a feature you use.
+VERDICT: REPLACE
+Cal.com's free hosted plan covers your link, Google sync and reminders. It's a hosted plan, not the open-source code.
 
-What you use:          one 30-min booking link · Google Calendar sync · email reminders · just you
-Best alternative:      Cal.diy (the open-source fork of Cal.com) · "MIT License" · last release v6.2.0 on 2026-03-01, last commit 2026-10-19 (busy project) · https://github.com/calcom/cal.com
-Also checked:          Easy!Appointments · "GNU GENERAL PUBLIC LICENSE Version 3" · 1.6.1 on 2026-10-19 · built for service businesses, and I couldn't confirm it sends reminders before the meeting
-                       Cal.com hosted Free · not open source (it's their hosted service) · their page lists "Email & SMS notifications" but doesn't say whether reminder workflows are included on Free
-                       Calendly Free · 1 event type + 1 calendar would be enough, but "Automate meeting reminders" isn't on Free
-Its running cost:      Cal.diy: free, but you host it yourself (server, database, email sending). It has no hosted version.
-Rebuild in an evening? partly: you could build a booking page that checks Google free/busy and sends a confirmation in an evening. Google sign-in (OAuth), hosting, reliable email delivery and timed reminders would take longer.
-You'd lose:            reminders (Cal.diy's README says "Workflows… have been removed"), hosted uptime, security updates, support, mobile apps, and possibly your current price
-Your cost today:       $12/month (the public Standard price now shows $10/seat with a "Save 17%" yearly toggle, and the page doesn't show the monthly-billed price: https://calendly.com/pricing)
-Assumed:               you don't want to run a server; "email reminders" means automatic emails before the meeting, not just the booking confirmation
-                       → If you only need booking confirmations, Calendly Free or Cal.com Free probably covers you: switch.
-                       → If Cal.com's hosted Free plan includes reminder workflows, switch to it.
-First step:            Make a free Cal.com account, set up one 30-min event, connect Google Calendar and check whether reminder workflows are available on Free. If they are, switch. If not, stay on Calendly.
-Sources:               https://calendly.com/pricing
-                       https://cal.com/pricing
-                       https://github.com/calcom/cal.com
-                       https://raw.githubusercontent.com/calcom/cal.com/HEAD/LICENSE
-                       https://api.github.com/repos/calcom/cal.com/releases/latest
-                       https://api.github.com/repos/calcom/cal.com/commits?per_page=3
-                       https://raw.githubusercontent.com/alextselegidis/easyappointments/HEAD/LICENSE
-                       https://api.github.com/repos/alextselegidis/easyappointments/releases/latest
+What you use:          one 30-min event type · Google Calendar sync · email reminders · single user
+Best alternative:      Cal.diy (calcom/cal.com repo, self-hosted) · "MIT License" · last release v6.2.0, "1 March" (the page doesn't show the year) · https://github.com/calcom/cal.com
+                       The README says "Teams, Organizations, Insights, Workflows, SSO/SAML, and other EE-only features have been removed". Without Workflows there are no reminder emails, so it doesn't cover what you use.
+Also checked:          none. Cal.diy is the obvious open-source pick, and it's missing the feature you need.
+Cheaper option:        Cal.com Free (hosted) · pricing: "Free forever", "Unlimited event types & calendars", "Email & SMS notifications" · help: "you can build workflows, but email steps use the default template text and can't be edited" · https://cal.com/pricing
+                       (Calendly Free has "One event type" and "One calendar connection", but "Automate meeting reminders" is marked not included. Calendly's blog says "Workflows are available on all paid Calendly plans.")
+Its running cost:      $0 (Cal.com Free, hosted)
+Rebuild in an evening? partly: you could build a booking page that checks Google free/busy and creates events. Reliable reminder emails, OAuth upkeep, hosting and spam protection wouldn't be finished in one evening. Not worth it.
+You'd lose:            custom reminder text (Free uses the default template) · Calendly's mobile app and its integrations · your current booking URL (you'll need to share the new link)
+Your cost today:       $12/month. Calendly's pricing page now shows Standard at "$10 /seat/mo" under "Billed yearly". That's the only price I saw on the page.
+Assumed:               the default reminder text is fine · you only send reminders to invitees · no other plans or people depend on the Calendly link. If you need custom reminder text, the answer flips to KEEP.
+First step:            Sign up for Cal.com Free, connect Google Calendar, create the 30-minute event, turn on the default reminder workflow, and book a test meeting with yourself before you cancel Calendly.
+Sources:               https://calendly.com/pricing · https://calendly.com/blog/workflows · https://cal.com/pricing · https://cal.com/help/workflows/workflowsoverview · https://raw.githubusercontent.com/calcom/cal.com/HEAD/LICENSE · https://github.com/calcom/cal.com · https://github.com/calcom/cal.com/releases/latest
 ```
 
-After the run, on 24 Oct 2026, a critic agent found two lines that don't match the live pages:
+Cal.com's pricing page doesn't name Google Calendar for the Free plan. It only says "Unlimited event types & calendars". You'll see whether sync works during the test booking.
 
-- `Your cost today`: on Calendly's [pricing page](https://calendly.com/pricing), Standard is $12 with "Billed monthly" selected.
-- `Also checked`, Cal.com hosted Free: Cal.com's [help page on workflows](https://cal.com/help/workflows/workflowsoverview#plan-limitations) says that on the Free plan you can build workflows, with the default email text.
+We checked 24 statements in this output against the live pages on 25 Oct 2026. 16 hold, 5 are wrong, and 3 are partly right, unverified or a judgment call. The run opened all 7 pages it lists under Sources. The 5 that need a correction:
 
-By the output's own "Assumed" line, the user in this made-up case should switch to Cal.com Free. The critic agent read Cal.com's docs and didn't open an account to test it.
+- REPLACE here means "move to Cal.com's hosted Free plan". That plan is not open source: Cal.com went closed source in April 2026. The skill defines REPLACE as a move to open source, so here it stretches its own rule. The open-source option it checked, Cal.diy, has no reminder emails.
+- Release v6.2.0 (1 Mar 2026) predates Cal.diy and ships under AGPLv3, with a commercial license for its ee folders. The main branch has been MIT since 15 Apr 2026, and Cal.diy hasn't published a release since. The skill should have listed the two licenses separately.
+- The output's last line, the one under its code block, is wrong. Cal.com's [pricing page](https://cal.com/pricing) lists "Google Calendar, Outlook, Apple Calendar, Zoho Calendar + more" in its feature table, with a check for the Free plan. The run read the page as text and missed the check marks.
+- Under "You'd lose": Cal.com Free has its own mobile app and lists 100+ integrations. You do lose one thing the output misses: Calendly Standard can remove Calendly branding, and Cal.com Free can't remove Cal.com branding.
+- The first step packs five actions into one line. The skill asks for one.
 
-For plan limits, the skill read only the pricing pages. We plan to change it in v0.1.1 so it also opens help pages on plan limits. When a pricing page has a monthly/yearly switch, it will compare your price with the same billing period and say which price it saw. The [CHANGELOG](CHANGELOG.md) lists this as a known issue.
+With "Billed monthly" selected, Calendly shows Standard at $12, the same as your price. The [CHANGELOG](CHANGELOG.md) lists all five points as known issues.
+
+<details>
+<summary>Earlier demo runs</summary>
+
+v0.1.0 (24 Oct 2026) and v0.1.1 (25 Oct 2026) ran the same input and both said KEEP. Critic agents checked both runs against the live pages and found that Cal.com's hosted Free plan covers all three features. In v0.1.2 we added the Cheaper option line to catch that case.
+
+</details>
 
 ## Guardrails
 
@@ -101,13 +101,13 @@ The skill's instructions include these rules:
 - Don't crack it, bypass license checks, share accounts or scrape paid content.
 - Don't decompile it, intercept its private APIs or copy its code, assets, branding or look. A rebuild is a new program that does the same job.
 - Get data out only through the official export or the documented API.
-- Read each license from its LICENSE file: badges and the API's license field can show NOASSERTION for mixed licenses. Check enterprise folders and hosted-plan terms too.
-- Keep the license and notices of any reused open-source code, and treat reused GPL or AGPL code as making the rebuild GPL or AGPL too.
+- Read each license from its LICENSE file: for mixed licenses, badges and the API's license field can show NOASSERTION or only the root license. Check enterprise folders and hosted-plan terms too.
+- Keep the license and notices of any reused open-source code. A rebuild that reuses GPL or AGPL code must use the same license when someone distributes it (for AGPL, also when others use it over a network).
 - Use only the user's own numbers and never estimate savings.
 
 ## Why this exists
 
-With a coding agent you can rebuild the part of an app you use and cancel the subscription, but you may lose a feature you rely on. If you switch to an open-source alternative instead, its maintainers may keep some features in an enterprise folder or on a paid hosted plan. keep-or-rebuild looks for both problems, with sources, before you spend an evening on a rebuild. Nika Code's agents wrote the skill, and critic agents reviewed it before release.
+With a coding agent you can rebuild the part of an app you use and cancel the subscription, but you may lose a feature you rely on. If you switch to an open-source alternative instead, its maintainers may keep some features in an enterprise folder or on a paid hosted plan. keep-or-rebuild looks for both problems, with sources, before you spend an evening on a rebuild. Nika Code built it with Claude Code agents, and critic agents reviewed it before release. That critic is next in line as its own skill: [follow @thenikacode](https://x.com/thenikacode) to get it.
 
 ## FAQ
 
@@ -117,6 +117,6 @@ With a coding agent you can rebuild the part of an app you use and cancel the su
 
 ## License
 
-MIT. Made by [Nika Code](https://github.com/thenikacode), a character: one human and a crew of AI agents. Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).
+MIT. Made by [Nika Code](https://github.com/thenikacode) with Claude Code. Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Not affiliated with Anthropic or with any product named in the demo run. Those products appear here only to describe it.
