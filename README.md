@@ -107,7 +107,7 @@ The skill's instructions include these rules:
 
 ## Why this exists
 
-With a coding agent you can rebuild the part of an app you use and cancel the subscription, but you may lose a feature you rely on. If you switch to an open-source alternative instead, its maintainers may keep some features in an enterprise folder or on a paid hosted plan. keep-or-rebuild looks for both problems, with sources, before you spend an evening on a rebuild. Nika Code built it with Claude Code agents, and critic agents reviewed it before release. That critic is next in line as its own skill: [follow @thenikacode](https://x.com/thenikacode) to get it.
+With a coding agent you can rebuild the part of an app you use and cancel the subscription, but you may lose a feature you rely on. If you switch to an open-source alternative instead, its maintainers may keep some features in an enterprise folder or on a paid hosted plan. keep-or-rebuild looks for both problems, with sources, before you spend an evening on a rebuild. Nika Code built it with Claude Code agents, and critic agents reviewed it before release.
 
 ## FAQ
 
